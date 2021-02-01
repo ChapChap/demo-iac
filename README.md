@@ -24,3 +24,9 @@
 `outputs.tf` to outputs some usefull infos
 `provider.tf` to indicate terraform to use `hashicorp/google` plugin
 `variables.tf` where to store variables schema with description
+
+## Modules
+
+Do `terraform init` again
+
+Put modules in `modules/` and edit references
