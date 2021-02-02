@@ -41,24 +41,12 @@ resource "google_project_service" "cb" {
   disable_on_destroy         = false
 }
 
-# Create Cloud Function
-resource "google_cloudfunctions_function" "function" {
-  name    = var.function_name
-  runtime = "nodejs12"
-
-  available_memory_mb   = 128
-  source_archive_bucket = google_storage_bucket.bucket.name
-  source_archive_object = google_storage_bucket_object.zip.name
-  trigger_http          = true
-  entry_point           = var.function_entry_point
-}
-
-# Create IAM entry so all users can invoke the function
-resource "google_cloudfunctions_function_iam_member" "invoker" {
-  project        = google_cloudfunctions_function.function.project
-  region         = google_cloudfunctions_function.function.region
-  cloud_function = google_cloudfunctions_function.function.name
-
-  role   = "roles/cloudfunctions.invoker"
-  member = "allUsers"
+module "deploy_app" {
+  source = "../deploy-app"
+  for_each = toset(var.app_version)
+  
+  bucket_name          = google_storage_bucket.bucket.name
+  bucket_object        = google_storage_bucket_object.zip.name
+  function_entry_point = var.function_entry_point
+  function_name        = "${var.function_name}-${each.value}"
 }

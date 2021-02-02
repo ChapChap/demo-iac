@@ -16,3 +16,8 @@ variable "function_entry_point" {
   description = "Cloud Function Entrypoint"
   type        = string
 }
+
+variable "app_version" {
+  description = "List of application version to be deployed"
+  type        = list(string)
+}
