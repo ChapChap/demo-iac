@@ -1,0 +1,29 @@
+# .pre-commit-config.yaml
+---
+repos:
+  - repo: git://github.com/antonbabenko/pre-commit-terraform
+    rev: master
+    hooks:
+      - id: terraform_fmt
+      - id: terraform_docs
+      - id: terraform_tflint
+      - id: terraform_tfsec
+      - id: checkov
+        args:
+          - '--skip-check'
+          - 'CKV_GCP_43'      # Key Rotation < 90 days
+
+  - repo: git://github.com/adrienverge/yamllint
+    rev: master
+    hooks:
+      - id: yamllint
+        args: ['-c=.yamllint']
+
+  - repo: git://github.com/pre-commit/pre-commit-hooks
+    rev: master
+    hooks:
+      - id: check-yaml
+      - id: end-of-file-fixer
+        exclude: 'ansible/roles/deploy_ssh_keys/files'
+      - id: trailing-whitespace
+      - id: check-merge-conflict
